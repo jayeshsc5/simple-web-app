@@ -3,7 +3,22 @@ version: 0.2
 phases:
   build:
     commands:
+      # Build the Docker image
+      - echo "Building Docker image..."
       - docker build -t simple-web-app .
+      
+      # Tag the Docker image
+      - echo "Tagging Docker image..."
       - docker tag simple-web-app:latest 203918842836.dkr.ecr.ap-south-1.amazonaws.com/simple-web-app:latest
-      - $(aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 203918842836.dkr.ecr.ap-south-1.amazonaws.com)
+      
+      # Authenticate Docker to AWS ECR
+      - echo "Authenticating Docker to AWS ECR..."
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 203918842836.dkr.ecr.ap-south-1.amazonaws.com
+      
+      # Push the Docker image to AWS ECR
+      - echo "Pushing Docker image to AWS ECR..."
       - docker push 203918842836.dkr.ecr.ap-south-1.amazonaws.com/simple-web-app:latest
+
+artifacts:
+  files:
+    - '**/*'
