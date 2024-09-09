@@ -1,0 +1,9 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - docker build -t simple-web-app .
+      - docker tag simple-web-app:latest 203918842836.dkr.ecr.ap-south-1.amazonaws.com/simple-web-app:latest
+      - $(aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 203918842836.dkr.ecr.ap-south-1.amazonaws.com)
+      - docker push 203918842836.dkr.ecr.ap-south-1.amazonaws.com/simple-web-app:latest
